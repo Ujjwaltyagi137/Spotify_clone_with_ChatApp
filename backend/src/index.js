@@ -31,7 +31,7 @@ app.use(fileUpload({
 }))
 app.use(cors(
     {
-        origin : "http://localhost:3000",
+        origin : "https://spotify-clone-with-chat-app.vercel.app",
         credentials : true
     }
 ))
