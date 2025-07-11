@@ -35,7 +35,7 @@ const AdminPage = () => {
 						Albums
 					</TabsTrigger>
 				</TabsList>
-
+				
 				<TabsContent value='songs'>
                 <SongsTabContent />
 				</TabsContent>

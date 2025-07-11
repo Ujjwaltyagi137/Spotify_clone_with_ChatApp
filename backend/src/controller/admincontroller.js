@@ -8,7 +8,7 @@ const uploadToCloudinary = async (file)=>{
         const result = await  cloudinary.uploader.upload(file.tempFilePath,{
             resource_type: "auto",
         })
-         console.log("✅ Cloudinary upload successful:", result.secure_url);
+         console.log(" Cloudinary upload successful:", result.secure_url);
         return result.secure_url;
     } catch (error) {
          console.error(" Cloudinary Upload Error:");
@@ -45,7 +45,7 @@ const createSong = async (req , res,next)=>{
             $push : { songs : Song._id}
         })
       }
-      return res.status(201).json(song)
+      return res.status(201).json(Song)
     } catch (error) {
         console.log("Error in createSong", error);
         next(error)  
@@ -54,6 +54,11 @@ const createSong = async (req , res,next)=>{
 
 const deleteSong = async (req ,res , next)=>{
     try {
+        const { userId } = req.auth(); // ✅ Use function-based Clerk auth
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
         const {id} = req.params;
         const Song = await song.findById(id);
         if(Song.albumId){
@@ -73,6 +78,7 @@ const deleteSong = async (req ,res , next)=>{
 
 const createAlbum = async (req,res , next) =>{
     try {
+        
         const {title ,artist ,releaseYear} =  req.body;
         const {imageFile} = req.files
         const imageUrl = await uploadToCloudinary(imageFile);

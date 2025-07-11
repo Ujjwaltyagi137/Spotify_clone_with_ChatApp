@@ -1,3 +1,4 @@
+const message = require("../models/messagemodel");
 const user = require("../models/usermodel");
 const { clerkClient } = require("@clerk/clerk-sdk-node");
 
@@ -41,4 +42,21 @@ const getAllUsers = async (req,res,next)=>{
     }
 }
 
-module.exports = {getAllUsers , syncClerkUserFromFrontend}
+const getMessages = async (req, res, next) => {
+	try {
+		const myId = req.auth.userId;
+		const { userId } = req.params;
+
+		const messages = await message.find({
+			$or: [
+				{ senderId: userId, receiverId: myId },
+				{ senderId: myId, receiverId: userId },
+			],
+		}).sort({ createdAt: 1 });
+
+		res.status(200).json(messages);
+	} catch (error) {
+		next(error);
+	}
+};
+module.exports = {getAllUsers , getMessages ,syncClerkUserFromFrontend}

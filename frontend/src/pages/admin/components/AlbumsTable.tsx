@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
-import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useMusicStore } from '@/stores/useMusicStore';
-import { Calendar, Music, Table, Trash2 } from 'lucide-react';
+import { Calendar, Music, Trash2 } from 'lucide-react';
 import { useEffect } from 'react'
 
 const AlbumsTable = () => {
@@ -24,23 +24,23 @@ const AlbumsTable = () => {
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{albums.map((album) => (
-					<TableRow key={album._id} className='hover:bg-zinc-800/50'>
+				{albums.map((Album) => (
+					<TableRow key={Album._id} className='hover:bg-zinc-800/50'>
 						<TableCell>
-							<img src={album.imageUrl} alt={album.title} className='w-10 h-10 rounded object-cover' />
+							<img src={Album.imageUrl} alt={Album.title} className='w-10 h-10 rounded object-cover' />
 						</TableCell>
-						<TableCell className='font-medium'>{album.title}</TableCell>
-						<TableCell>{album.artist}</TableCell>
+						<TableCell className='font-medium'>{Album.title}</TableCell>
+						<TableCell>{Album.artist}</TableCell>
 						<TableCell>
 							<span className='inline-flex items-center gap-1 text-zinc-400'>
 								<Calendar className='h-4 w-4' />
-								{album.releaseYear}
+								{Album.releaseYear}
 							</span>
 						</TableCell>
 						<TableCell>
 							<span className='inline-flex items-center gap-1 text-zinc-400'>
 								<Music className='h-4 w-4' />
-								{album.songs.length} songs
+								{Album.songs.length} songs
 							</span>
 						</TableCell>
 						<TableCell className='text-right'>
@@ -48,7 +48,7 @@ const AlbumsTable = () => {
 								<Button
 									variant='ghost'
 									size='sm'
-									onClick={() => deleteAlbum(album._id)}
+									onClick={() => deleteAlbum(Album._id)}
 									className='text-red-400 hover:text-red-300 hover:bg-red-400/10'
 								>
 									<Trash2 className='h-4 w-4' />

@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '.env') });
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const connect = require('./connections/db');
 const { clerkMiddleware } = require('@clerk/express');
 const userRoutes = require('./router/userrouter');
@@ -11,8 +11,13 @@ const songRoutes = require('./router/songrouter');
 const statRoutes = require('./router/statrouter');
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
+const { createServer } = require('http');
+const initializeSocket = require('./connections/socket');
 const app = express();
 const PORT = process.env.PORT;
+
+const httpServer = createServer(app);
+initializeSocket(httpServer);
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(clerkMiddleware());
@@ -45,7 +50,7 @@ app.use((err,req,res,next)=>{
   try {
     await connect();
     console.log(' Database connected');
-    app.listen(PORT, () =>
+    httpServer.listen(PORT, () =>
       console.log(` Server running at http://localhost:${PORT}`)
     );
   } catch (err) {

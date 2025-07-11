@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const {createSong , deleteSong, createAlbum, deleteAlbum, checkAdmin} = require("../controller/admincontroller");
 const { protectRoute, requireAdmin } = require("../middleware/authmiddleware");
+
 const router = Router();
 
 router.use(protectRoute , requireAdmin)
