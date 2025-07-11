@@ -141,10 +141,6 @@ export const useMusicStore = create<MusicStore>((set)=>({
 	},
 
 	deleteAlbum: async (id) => {
-		const { getToken } = getAuth(); // ✅ get Clerk token
-    const token = await getToken();
-
-    if (!token) throw new Error("No token found");
 		set({ isLoading: true, error: null });
 		try {
 			await axiosInstance.delete(`/admin/albums/${id}`);
