@@ -47,7 +47,10 @@ cron.schedule("0 * * * *", () => {
 	}
 });
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin:  [
+    "http://localhost:3000",
+    "https://spotify-clone-with-chatapp.onrender.com",
+  ],
   credentials: true,
 }));
 app.use('/api/users', userRoutes)
@@ -58,7 +61,7 @@ app.use('/api/songs', songRoutes)
 app.use('/api/stats', statRoutes)
 
 if (process.env.NODE_ENV === "production") {
-	app.use(express.static(path.join(__dirname, "../frontend/dist")));
+	app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 	app.get("*", (req, res) => {
 		res.sendFile(path.resolve(__dirname, "../frontend", "dist", "index.html"));
 	});
