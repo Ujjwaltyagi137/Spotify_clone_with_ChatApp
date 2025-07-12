@@ -54,7 +54,7 @@ const createSong = async (req , res,next)=>{
 
 const deleteSong = async (req ,res , next)=>{
     try {
-        const { userId } = req.auth(); // ✅ Use function-based Clerk auth
+        const { userId } = req.auth(); 
 
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized" });

@@ -34,7 +34,7 @@ const syncClerkUserFromFrontend = async (req, res) => {
 const getAllUsers = async (req,res,next)=>{
     try {
         const { userId } = await req.auth();
-        const Users = await user.find({ clerkId: { $ne: userId } }); // optional filter
+        const Users = await user.find({ clerkId: { $ne: userId } });
         console.log("fetched user", Users);
         return res.status(200).json(Users);
     } catch (error) {

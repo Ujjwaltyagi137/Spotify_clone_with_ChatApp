@@ -159,10 +159,8 @@ const seedDatabase = async () => {
 			},
 		];
 
-		// Insert all albums
 		const createdAlbums = await album.insertMany(albums);
 
-		// Update songs with their album references
 		for (let i = 0; i < createdAlbums.length; i++) {
 			const Album = createdAlbums[i];
 			const albumSongs = albums[i].songs;

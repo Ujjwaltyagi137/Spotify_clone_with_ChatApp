@@ -9,6 +9,8 @@ const authRoutes = require('./router/authrouter');
 const albumRoutes = require('./router/albumrouter');
 const songRoutes = require('./router/songrouter');
 const statRoutes = require('./router/statrouter');
+const cron = require('node-cron');
+const fs = require('fs')
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
 const { createServer } = require('http');
@@ -29,9 +31,24 @@ app.use(fileUpload({
         fileSize: 100*1024*1024
     }
 }))
+
+const tempDir = path.join(process.cwd(), "tmp");
+cron.schedule("0 * * * *", () => {
+	if (fs.existsSync(tempDir)) {
+		fs.readdir(tempDir, (err, files) => {
+			if (err) {
+				console.log("error", err);
+				return;
+			}
+			for (const file of files) {
+				fs.unlink(path.join(tempDir, file), (err) => {});
+			}
+		});
+	}
+});
 app.use(cors(
     {
-        origin : "https://spotify-clone-with-chat-app.vercel.app",
+        origin : "http://localhost:3000",
         credentials : true
     }
 ))
@@ -41,6 +58,13 @@ app.use('/api/auth', authRoutes)
 app.use('/api/albums', albumRoutes)
 app.use('/api/songs', songRoutes)
 app.use('/api/stats', statRoutes)
+
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static(path.join(__dirname, "../frontend/dist")));
+	app.get("*", (req, res) => {
+		res.sendFile(path.resolve(__dirname, "../frontend", "dist", "index.html"));
+	});
+}
 
 app.use((err,req,res,next)=>{
     res.status(500).json({message : process.env.NODE_ENV === "production"? "Internal server error": err.message });

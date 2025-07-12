@@ -1,4 +1,5 @@
 const { Server } = require("socket.io");
+const message = require("../models/messagemodel");
 
 
 const initializeSocket = (server)=>{
@@ -11,9 +12,9 @@ const initializeSocket = (server)=>{
     const userSockets = new Map()
     const userActivities = new Map()
 
-    io.on("connections",(socket)=>{
+    io.on("connection",(socket)=>{
 
-        socket.on("user-connection",(userId)=>{
+        socket.on("user_connected",(userId)=>{
             userSockets.set(userId, socket.id);
 			userActivities.set(userId, "Idle");
 
@@ -34,7 +35,7 @@ const initializeSocket = (server)=>{
 			try {
 				const { senderId, receiverId, content } = data;
 
-				const message = await Message.create({
+				const messages = await message.create({
 					senderId,
 					receiverId,
 					content,
@@ -42,10 +43,10 @@ const initializeSocket = (server)=>{
 
 				const receiverSocketId = userSockets.get(receiverId);
 				if (receiverSocketId) {
-					io.to(receiverSocketId).emit("receive_message", message);
+					io.to(receiverSocketId).emit("receive_message", messages);
 				}
 
-				socket.emit("message_sent", message);
+				socket.emit("message_sent", messages);
 			} catch (error) {
 				console.error("Message error:", error);
 				socket.emit("message_error", error.message);

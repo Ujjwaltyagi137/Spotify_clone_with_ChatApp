@@ -18,14 +18,14 @@ interface ChatStore {
 	initSocket: (userId: string) => void;
 	disconnectSocket: () => void;
 	sendMessage: (receiverId: string, senderId: string, content: string) => void;
-	fetchMessages: (userId: string) => Promise<void>;
+	fetchMessages: (userId: string, token: string) => Promise<void>;
 	setSelectedUser: (user: User | null) => void;
 }
 
 const baseURL = import.meta.env.MODE === "development" ? "http://localhost:5000" : "/";
 
 const socket = io(baseURL, {
-	autoConnect: false, // only connect if user is authenticated
+	autoConnect: false,
 	withCredentials: true,
 });
 
@@ -122,15 +122,19 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 		socket.emit("send_message", { receiverId, senderId, content });
 	},
 
-	fetchMessages: async (userId: string) => {
-		set({ isLoading: true, error: null });
-		try {
-			const response = await axiosInstance.get(`/users/messages/${userId}`);
-			set({ messages: response.data });
-		} catch (error: any) {
-			set({ error: error.response.data.message });
-		} finally {
-			set({ isLoading: false });
-		}
-	},
+	fetchMessages: async (userId: string, token: string) => {
+  set({ isLoading: true, error: null });
+  try {
+    const response = await axiosInstance.get(`/users/messages/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    set({ messages: response.data });
+  } catch (error: any) {
+    set({ error: error.response?.data?.message || "Error fetching messages" });
+  } finally {
+    set({ isLoading: false });
+  }
+},
 }));
