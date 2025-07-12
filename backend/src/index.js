@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs')
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const connect = require('./connections/db');
 const { clerkMiddleware } = require('@clerk/express');
@@ -10,7 +11,6 @@ const albumRoutes = require('./router/albumrouter');
 const songRoutes = require('./router/songrouter');
 const statRoutes = require('./router/statrouter');
 const cron = require('node-cron');
-const fs = require('fs')
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
 const { createServer } = require('http');
