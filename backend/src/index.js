@@ -46,12 +46,10 @@ cron.schedule("0 * * * *", () => {
 		});
 	}
 });
-app.use(cors(
-    {
-        origin : "https://spotify-clone-with-chat-appp.vercel.app",
-        credentials : true
-    }
-))
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+}));
 app.use('/api/users', userRoutes)
 app.use('/api/admin', adminRoutes)
 app.use('/api/auth', authRoutes)
